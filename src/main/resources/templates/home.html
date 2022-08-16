@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+>
+<head th:replace="fragments/common::head"></head>
+
+<body>
+<header th:replace="fragments/common::nav"></header>
+<!-- SLIDER -->
+<!--https://www.youtube.com/watch?v=5bxFSOA5JYo-->
+<!-- the example in the video works on mobile with touch events -->
+
+<main id="home-main" role="main" class="bg-dark">
+
+
+    <div id="homepage-title-container">
+        <h1>Games of the Week</h1>
+        <section class="no-games-quote-container">
+            <h2 class="no-games-quote" th:if="${noGames}" th:object="${noGames}" th:text="${noGames}"></h2>
+            <h2 class="no-games-author" th:if="${quoteAuthor}" th:object="${quoteAuthor}" th:text="${quoteAuthor}"></h2>
+        </section>
+
+
+    </div>
+
+    <!--th:each="game : ${carouselGames}" th:object="${game}">           th:class="${game.isFirst} ? 'item active':'item' -->
+    <!-- Need to know which one is the first, as the first slide in the carousel needs an active attribute -->
+
+    <div class="home-cards-container row mx-auto">
+        <!--  <div class="home-game-card col-sm-6"> -->
+
+        <div class="home-game-card container col border-light col-lg-3 col-md-6 col-sm-9" th:each="game : ${carouselGames}"
+             th:object="${game}">
+            <div class="card-image-container">  <img alt="Card image cap" class="home-card-title-img" th:src="*{titleImageUrl}"></div>
+
+
+            <div class="home-card-text-buttons">
+                <h5 class="card-title" th:text="*{title}">Game title</h5>
+
+                <p class="card-text" th:text="*{description}">Short game description.</p>
+                <!-- List<String> genres in GameCardViewModel and GameViewModel-->
+
+                <hr class="hr-separator">
+                <div class="buttons-container">
+                    <a class="link-button btn btn-info w-50" th:href="@{/games/{gameId}(gameId=*{id})}">View
+                        game</a>
+                </div>
+
+            </div>
+        </div>
+
+
+        <!--   </div>-->
+
+
+    </div>
+
+
+</main>
+<!-- <script src="/scripts/slider.js"></script>  -->
+
+
+<!-- <div class="spacer-home"></div> -->
+
+<!-- <script th:src="@{/scripts/carousel.js}"></script> NOT Bootstrap imported carousel JS -->
+<script th:src="@{/scripts/admin-panel.js}"></script> <!-- for REST controller -->
+
+</body>
+
+
+</html>

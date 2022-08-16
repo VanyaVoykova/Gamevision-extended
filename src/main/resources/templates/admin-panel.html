@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="fragments/common::head"></head>
+
+
+<body>
+<header th:replace="fragments/common::nav"></header>
+
+<!-- this is not needed <input type="hidden" name="userId" id="userId" th:object="${user}" th:value="${user.id}">   null-->
+
+<!--------------------------------- Extra NAV bar for ADMINS  - only in admin panel - remove--------------------IN HEAD---------------------->
+<nav th:fragment="admin-navbar" class="navbar navbar-expand-md rounded d-flex">
+
+    <th:block sec:authorize="hasAuthority('ROLE_ADMIN')">
+        <ul class="nav navbar-nav ms-auto center-navbar" id="admin-navbar">
+            <!-- Link below uses the old @Controller, more playthroughs can be added in game view-->
+            <li class="nav-item"><a th:href="@{/games/add}">Add Game</a></li>
+
+            <li class="nav-item"><a class="admin-nav" id="promoteAnchor" href="#">PROMOTE USER</a></li>
+            <li class="admin-nav nav-item"><a class="admin-nav" id="demoteAnchor" href="#">DEMOTE USER</a></li>
+            <li class="admin-nav nav-item"><a class="admin-nav" id="banAnchor" href="#">BAN USER</a></li>
+            <li class="admin-nav nav-item"><a class="admin-nav" id="unbanAnchor" href="#">UNBAN USER</a></li>
+        </ul>
+    </th:block>
+
+</nav>
+
+<main id="main-element">
+
+    <!-- Write here, plonk in JS -->
+    <div id="admin-action-form-container" class="admin-panel-options-container">
+
+        <!--------------------------------------One form, visualization and actions are modified with JS -------------------------------------->
+        <div class="admin-panel-option">
+            <h1 id="admin-action-title">Ban user</h1>
+            <hr class="hr-3 w-25 bg-white"/>
+
+            <form sec:authorize="hasAuthority('ROLE_ADMIN')" id="admin-action-form" method="POST" action="/"
+                  class="form-width mx-auto w-25 bg-blur rounded">
+
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+
+                <div class="form-group">
+                    <div class="label-holder textCol d-flex justify-content-center">
+                        <label for="username" class="white-text h4 mb-2 text-white">Username</label>
+                    </div>
+
+                    <input
+                            type="text" class="form-control" id="username"
+                            name="username"
+                            placeholder="Username"
+                            required
+                            minlength="3" maxlength="20"
+                    >
+                    <small id="username-length-error" class="exception-message invalid-feedback">
+                    </small>
+
+                </div>
+
+
+                <div class="button-holder d-flex justify-content-center">
+                    <!-- show/hide these depending on what's clicked in the admin nav bar -->
+                    <input id="submitActionBtn" type="submit" class="link-button btn btn-info w-50" value="admin-action"
+                           name="promote"/>
+
+                </div>
+
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+</main>
+
+<script th:src="@{/scripts/admin-panel.js}"></script> <!-- for REST controller -->
+</body>
+</html>

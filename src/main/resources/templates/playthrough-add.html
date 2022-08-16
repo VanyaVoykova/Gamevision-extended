@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+>
+
+<head th:replace="fragments/common::head"></head>
+
+<body>
+<header th:replace="fragments/common::nav"></header>
+<main>
+  <h1>Add Playthrough</h1>
+  <h1>for</h1>
+  <h1 class="title-highlight" th:text="${gameTitle}">Game Title</h1>
+  <hr class="hr-3 w-25 bg-white"/>
+
+  <div class="exceptions-container">
+    <p class="exception-message" th:text="${exceptionMessage}">Exception message</p>
+  </div>
+
+  <!-- <form:form th:object="${gameAddBindingModel}" modelAttribute="selectedGenres"                + the namespace-->
+  <form th:object="${playthroughAddBindingModel}"
+        class="mx-auto w-25 bg-blur rounded" th:method="POST" th:action="@{/games/{id}/playthroughs/add(id = ${gameId})}">
+
+
+
+    <!-- Add playthroughs TODO:-->
+    <div class="add-playthroughs-container">
+      <div class="form-group">
+        <div class="label-holder textCol d-flex justify-content-center">
+          <label for="playthrough-title" class="h4 mb-2 text-white">Playthrough Title</label>
+        </div>
+        <input th:field="*{title}"
+               th:errorclass="'is-invalid alert-danger'"
+               type="text" class="form-control" id="playthrough-title" name="title"/>
+        <small th:if="${#fields.hasErrors('title')}" th:errors="*{title}"
+               class="invalid-feedback text-danger"
+        >Playthrough title error</small>
+      </div>
+
+
+      <div class="form-group">
+        <div class="label-holder textCol d-flex justify-content-center">
+          <label for="playthrough-url" class="h4 mb-2 text-white">Playthrough URL</label>
+        </div>
+        <input th:field="*{videoUrl}"
+               th:errorclass="'is-invalid alert-danger'"
+               type="text" class="form-control" id="playthrough-url" name="videoUrl"/>
+        <small th:if="${#fields.hasErrors('videoUrl')}" th:errors="*{videoUrl}"
+               class="invalid-feedback text-danger"
+        >Playthrough video url error</small>
+      </div>
+
+      <div class="form-group">
+        <div class="label-holder textCol d-flex justify-content-center">
+          <label for="playthrough-description" class="h4 mb-2 text-white">Playthrough Description</label>
+        </div>
+        <input th:field="*{description}"
+               th:errorclass="'is-invalid alert-danger'"
+               type="text" class="form-control" id="playthrough-description" name="description"/>
+        <small th:if="${#fields.hasErrors('description')}" th:errors="*{description}"
+               class="invalid-feedback text-danger"
+        >Playthrough description error</small>
+      </div>
+
+    </div>
+
+    <!-- Submit -->
+    <div class="button-holder d-flex justify-content-center">
+        <button class="link-button btn btn-info w-50" type="submit" value="Register">Add playthrough</button>
+    </div>
+
+  </form>
+
+
+</main>
+
+
+
+</body>
+
+<!-- <footer th:replace="fragments/common::footer"></footer> -->
+</html>

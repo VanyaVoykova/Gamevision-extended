@@ -1,0 +1,104 @@
+package com.gamevision.gamevision.service;
+
+import com.gamevision.errorhandling.exceptions.UserNotFoundException;
+import com.gamevision.model.entity.UserEntity;
+import com.gamevision.model.entity.UserRoleEntity;
+import com.gamevision.model.enums.UserRoleEnum;
+import com.gamevision.model.user.GamevisionUserDetails;
+import com.gamevision.repository.UserRepository;
+import com.gamevision.service.GamevisionUserDetailsService;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Optional;
+import java.util.Set;
+
+import static org.mockito.Mockito.when;
+
+@ExtendWith(MockitoExtension.class)
+public class GamevisionUserDetailsServiceTest {
+
+    @Mock
+    private UserRepository mockUserRepository; //mock repo
+
+    private GamevisionUserDetailsService userDetailsServiceToTest; //real service to test
+
+    @BeforeEach
+        //fire up the mock repo - this is the test alternative of injecting it in the service's constructor
+    void setUp() {
+        userDetailsServiceToTest = new GamevisionUserDetailsService(mockUserRepository);
+    }
+
+    @Test
+        //The test itself as a new method
+        //Steps: 1. Arrange (create test entity and teach repo how to return it) 2. Act 2. Assert
+    void loadUserByUsername_UserExists() {
+        //ARRANGE - create a UserEntity to test
+        UserEntity testUserEntity = new UserEntity()
+                .setUsername("TestUsername")
+                .setPassword("testUserPassword")
+                .setEmail("test@testers.com")
+                .setActive(true)
+                .setUserRoles(Set.of(
+                        new UserRoleEntity().setName(UserRoleEnum.USER),
+                        new UserRoleEntity().setName(UserRoleEnum.ADMIN)
+                ));
+
+        //when-then - teach the mock repo how,  WHEN asked find the test entity, THEN to return it (as Optional entity)
+        //the REAL @Service will use the MOCK repo to receive the UserEntity and get the UserDetails from it
+        when(mockUserRepository.findByUsernameIgnoreCase(testUserEntity.getUsername()))
+                .thenReturn(Optional.of(testUserEntity));
+
+        //Act - call the action we want to test (here: the service finding UserDetails by username)
+        GamevisionUserDetails userDetails = (GamevisionUserDetails)
+                userDetailsServiceToTest.loadUserByUsername(testUserEntity.getUsername());
+
+        //Assert all is as it should be - fields in UserDetails should match the ones in the entity
+        //test - actual
+        Assertions.assertEquals(testUserEntity.getUsername(), userDetails.getUsername());
+        Assertions.assertEquals(testUserEntity.getPassword(), userDetails.getPassword());
+        Assertions.assertEquals(testUserEntity.getEmail(), userDetails.getEmail());
+        Assertions.assertEquals(testUserEntity.isActive(), userDetails.isActive());
+
+        //As authorities (user roles) are a set, we need to
+        //1. test if the set to be tested and the actual set are of equal size (in this case 2)
+        //2. compare roles with each other
+        Collection<? extends GrantedAuthority> authorities = userDetails.getAuthorities();
+        Assertions.assertEquals(2, authorities.size());
+
+        //Gamevision user roles are kept in an unordered Set, so we only check size and whether it contains the roles.
+        SimpleGrantedAuthority userAuthority = new SimpleGrantedAuthority("ROLE_" + UserRoleEnum.USER.name());
+        Assertions.assertTrue(authorities.contains(userAuthority));
+
+        SimpleGrantedAuthority adminAuthority = new SimpleGrantedAuthority("ROLE_" + UserRoleEnum.ADMIN.name());
+        Assertions.assertTrue(authorities.contains(adminAuthority));
+
+        //If they were lists (fixed order), we can test with iterator like this:
+        //  Iterator<? extends GrantedAuthority> authoritiesIterator = authorities.iterator();
+        // Assertions.assertEquals("ROLE_" + UserRoleEnum.USER.name(), authoritiesIterator.next().getAuthority());
+        // Assertions.assertEquals("ROLE_" + UserRoleEnum.ADMIN.name(), authoritiesIterator.next().getAuthority());
+//
+    }
+
+
+    @Test
+    void testLoadUserByUsername_UserDoesNotExist() {
+
+        //Testing for nonexistent user and Mocks return empty optionals, so they'll already behave as if no such user exists
+        //if we don't arrange anything
+
+        Assertions.assertThrows(UsernameNotFoundException.class, () -> userDetailsServiceToTest.loadUserByUsername("Nonexistent"));
+    }
+
+
+}
+//todo test banned user cannot access stuff

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="fragments/common::head"></head>
+
+<body>
+<header th:replace="fragments/common::nav"></header>
+<section class="error-section">
+    <h1> This is not the page you are looking for.</h1>
+    <div class="error-info-container">
+        <div th:text="${errorCause}">Error cause</div>
+        <div th:text="${errorMessage}">Error message</div>
+    </div>
+</section>
+
+</body>
+</html>

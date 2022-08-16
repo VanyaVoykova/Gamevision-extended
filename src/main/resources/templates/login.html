@@ -1,0 +1,66 @@
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="fragments/common::head"></head> <!-- will replace with <head> -->
+<body>
+<header th:replace="fragments/common::nav"></header>
+<main>
+    <h1 class="border-bottom mb-5">Login</h1>
+    <hr class="hr-3 w-25 bg-white"/>
+
+<!-- no th:sec="!isAuthenticated()" or Spring Security will flub it  th:object="${userModel}"-->
+    <form th:action="@{/users/login}"
+          method="post"
+          class="form-width mx-auto w-25 bg-blur rounded">
+        <div>
+            <!-- added the h5 for invalid login -->
+
+
+            <div class="col-auto">
+                <label for="inputUsername" class="white-text h4 mb-2">Username</label>
+            </div>
+            <div class="col-auto">
+                <!-- no th:value="${username}" -->
+                <input
+                       type="text"
+                       name="username"
+                       required minlength="3" maxlength="20"
+                       id="inputUsername"
+                       class="form-control"
+                       aria-describedby="usernameHelpInline">
+            </div>
+        </div>
+        <div>
+            <div class="col-auto">
+                <label for="inputPassword" class="white-text h4 mb-2">Password</label>
+            </div>
+            <div class="col-auto">
+                <input type="password"
+                       name="password"
+                       required minlength="3" maxlength="20"
+                       id="inputPassword" class="form-control"
+                       aria-describedby="passwordHelpInline">
+            </div>
+
+            <!-- class="invalid-feedback bg-danger"> -->
+            <!-- class="errors alert alert-danger">  no   th:if="${bad_credentials}" in small-->
+            <div class="col-auto" >
+                <small th:if="${bad_credentials}"
+                       class="invalid-feedback text-danger">
+                    Invalid username or password.
+                </small>
+
+            </div>
+        </div>
+
+        <div class="form-width row g-3 align-items-center">
+            <button id="login-btn" class="link-button btn btn-info w-50" type="submit">Login</button>
+        </div>
+    </form>
+
+
+</main>
+<footer th:replace="fragments/common::footer"></footer>
+</body>
+</html>

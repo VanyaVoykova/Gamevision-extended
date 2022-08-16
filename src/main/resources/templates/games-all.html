@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="fragments/common::head"></head>
+<body> <!--  class="bg-dark" -->
+<header th:replace="fragments/common::nav"></header>
+<main>
+    <!-- <section class="section-format py-5"> replaced with div below -->
+    <div class="container-fluid">
+        <!-- <h2 class="text-center text-white mt-5">All Games</h2> -->
+        <h1>All Games</h1>
+        <h1 th:if="${noGames}" th:text="${noGames}"></h1>
+        <div th:each="game : ${games}"
+             th:object="${game}"
+             class="game-card-container row mx-auto d-flex flex-row justify-content-center">
+            <div class="game-card col-sm-6">
+
+                <div class="card border-light mb-3">
+                    <img alt="Card image cap" class="card-title-img card-img-top" th:src="*{titleImageUrl}">
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="*{title}">Game title</h5>
+                        <p class="card-text" th:text="*{description}">Longest game description.</p>
+                        <!-- List<String> genres in GameCardViewModel and GameViewModel-->
+                        <div class="genres-container">
+                            <p>Genre(s):</p>
+                            <!--  <th:block th:each="genre : *{genres}"><span th:text="${genre}>Platformer, Puzzle</span></th:block> -->
+                            <ul class="genres-list">
+                                <li th:each="genre : *{genres}" th:text="${genre}"></li>
+                            </ul>
+                        </div>
+                        <hr class="hr-separator">
+                        <div class="buttons-container">
+                            <a class="link-button btn btn-info w-50" th:href="@{/games/{gameId}(gameId=*{id})}">View
+                                game</a>
+
+
+                            <!----------------------------------------------- Admins only ------------------------------------------------>
+                            <th:block sec:authorize="hasRole('ROLE_ADMIN')">
+                                <a class="link-button btn btn-info w-50"
+                                   th:href="@{/games/{gameId}/edit(gameId=*{id})}">Edit game</a>
+
+                                <!-- Done with JS, old link th:href="@{/games/{gameId}/delete(gameId=*{id})}" -->
+                                <a class="delete-btn delete-game-btn link-button btn btn-info w-50" href="/"
+                                   th:id="*{id}">Delete game</a>
+                            </th:block>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PAGINATION TODO: check, it's breaks-->
+            <!-- First is always enabled when we're NOT on the first page, same principle for Last -->
+            <!--
+            <div class="container-fluid container-fluid row justify-content-center">
+            <nav>
+                <ul class="pagination">
+                    <li class="page-item" th:classappend="${games.isFirst()} ? 'disabled' : ''">
+                        <a th:unless="${games.isFirst()}"
+                           th:href="@{/games/all(size=${games.getSize()},page=0)}"
+                           class="page-link" href="#">First</a>
+                        <a th:if="${games.isFirst()}"
+                           class="page-link" href="#">First</a>
+                    </li>
+                </ul>
+            </nav>
+            <nav>
+                <ul class="pagination">
+                    <li class="page-item" th:classappend="${games.hasPrevious() ? '' : 'disabled'}">
+                        <a th:if="${games.hasPrevious()}"
+                           th:href="@{/games/all(size=${games.getSize()},page=${games.getNumber() - 1})}"
+                           class="page-link" href="#">Previous</a>
+                        <a th:unless="${games.hasPrevious()}"
+                           class="page-link" href="#">Previous</a>
+                    </li>
+                </ul>
+            </nav>
+            <nav>
+                <ul class="pagination">
+                    <li class="page-item" th:classappend="${games.hasNext() ? '' : 'disabled'}">
+                        <a th:if="${games.hasNext()}"
+                           th:href="@{/games/all(size=${games.getSize()},page=${games.getNumber() + 1})}"
+                           class="page-link" href="#">Next</a>
+                        <a th:unless="${games.hasNext()}"
+                           class="page-link" href="#">Next</a>
+                    </li>
+                </ul>
+            </nav>
+            <nav>
+                <ul class="pagination">
+                    <li class="page-item" th:classappend="${offers.isLast()} ? 'disabled' : ''">
+                        <a th:unless="${offers.isLast()}"
+                           th:href="@{/offers/all(size=${offers.getSize()},page=${offers.getTotalPages() - 1})}"
+                           class="page-link" href="#">Last</a>
+                        <a th:if="${offers.isLast()}"
+                           class="page-link" href="#">Last</a>
+                    </li>
+                </ul>
+            </nav>
+</div>
+        -->
+            <!-- dummy card
+                            <div class="card border-light mb-3">
+                                <img class="card-img-top" src="/images/screenshots/ori-atbf-forlorn-ruins.png" alt="Card image cap">
+                                <div class="card-body">
+                                    <h5 class="card-title">Game title</h5>
+                                    <p class="card-text">HARDCODED DUMMY. Game description. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                                        Donec at est egestas, consequat nibh quis, rutrum enim. Quisque at tortor erat. Aliquam
+                                        rutrum mi sit amet neque sodales imperdiet. Donec hendrerit semper justo, in tempus purus
+                                        ullamcorper in. Praesent venenatis lobortis velit consequat iaculis. Sed bibendum dapibus
+                                        ante, ut lobortis lacus pulvinar nec.</p>
+                                    <p class="card-text bottom-card-text">Genre: <span>RPG, th:each for this span</span></p>
+                                    <a href="#" class="btn btn-primary">View game</a>
+                                    <hr>
+                                </div>
+                            </div>
+                        </div>
+            -->
+
+        </div>
+    </div>
+    <!-- </section> -->
+
+</main>
+
+<script th:src="@{/scripts/delete-confirm.js}"></script> <!-- for delete button functionality -->
+
+</body>
+
+</html>

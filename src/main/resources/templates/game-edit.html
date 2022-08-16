@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+>
+
+<head th:replace="fragments/common::head"></head>
+
+<body>
+<header th:replace="fragments/common::nav"></header>
+<main>
+  <h1>Edit Game</h1>
+  <hr class="hr-3 w-25 bg-white"/>
+
+  <div class="exceptions-container">
+    <p class="exception-message" th:text="${errorMessage}">Error message</p>
+  </div>
+
+  <!-- <form:form th:object="${gameAddBindingModel}" modelAttribute="selectedGenres"                + the namespace-->
+  <form th:object="${gameViewModel}"
+        class="mx-auto w-25 bg-blur rounded" th:method="POST" th:action="@{/games/{gameId}/edit(gameId=*{id})}">
+
+    <div class="form-group">
+      <div class="label-holder text-white textCol d-flex justify-content-center">
+        <label for="game-title" class="h4 mb-2">Title</label>
+      </div>
+      <input th:field="*{title}"
+             th:errorclass="'is-invalid alert-danger'"
+             type="text" class="form-control" id="game-title" name="title"/>
+      <small th:if="${#fields.hasErrors('title')}" th:errors="*{title}"
+             class="invalid-feedback text-danger"
+      >Title error message</small>
+    </div>
+
+    <div class="form-group">
+      <div class="label-holder textCol d-flex justify-content-center">
+        <label for="title-image" class="h4 mb-2 text-white">Title image URL</label>
+      </div>
+      <input th:field="*{titleImageUrl}"
+             th:errorclass="'is-invalid alert-danger'"
+             type="text" class="form-control" id="title-image" name="titleImageUrl"/>
+      <small th:if="${#fields.hasErrors('titleImageUrl')}" th:errors="*{titleImageUrl}"
+             class="invalid-feedback text-danger"
+      >Title image error</small>
+    </div>
+
+    <div class="form-group">
+      <div class="label-holder textCol d-flex justify-content-center">
+        <label for="description" class="h4 mb-2 text-white">Description</label>
+      </div>
+      <input th:field="*{description}"
+             th:errorclass="'is-invalid alert-danger'"
+             type="text" class="form-control" id="description" name="description"/>
+      <small th:if="${#fields.hasErrors('description')}" th:errors="*{description}"
+             class="invalid-feedback text-danger"
+      >Description error</small>
+    </div>
+
+    <!-- Genres - checkboxes -->
+    <div th:each="g : ${allGenres}" class="form-check form-check-inline">
+
+      <!-- todo: keep selected boxes:   for (chosenGenre : ${chosenGenres}) if g.getGenreName().equals(chosenGenre.getGenreName())) checkbox: checked -->
+      <label class="form-check-label" th:for="checkbox" th:text="${g}">Genre(s)</label>
+      <input class="form-check-input" type="checkbox" th:id="rpg-checkbox" name="genre" th:value="${g}"/>
+      <!--    th:checked="${chosenGenres != null and #lists.contains(chosenGenres, g)}" -->
+
+
+      <!-- Type conversion problem, cannot convert from null to boolean -->
+      <!-- Trying to check if chosenGenres is null and if it isn't check if it contains the genre
+
+      "${!chosenGenres.equals("") && #lists.contains(chosenGenres, g)}"/
+      -->
+      <!-- NOPE th:checked="${!chosenGenres and #lists.contains(chosenGenres, g)}" -->
+
+    </div>
+
+
+
+
+
+    <!-- Submit -->
+    <div class="button-holder d-flex justify-content-center">
+      <button class="link-button btn btn-info w-50" type="submit" value="Register">Edit game</button>
+    </div>
+
+  </form>
+
+
+</main>
+
+
+
+</body>
+
+
+</html>

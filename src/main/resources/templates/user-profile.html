@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+>
+
+<head th:replace="fragments/common::head"></head>
+
+<body>
+<header th:replace="fragments/common::nav"></header>
+<!-- todo check this <input type="hidden" name="userId" id="userId" th:object="${user}" th:value="${user.id}"> -->>
+
+<main>
+    <aside>
+        <nav class="side-nav navbar navbar-expand-md rounded d-flex">
+
+            <li><a href="/users/profile/edit">My Games</a></li>
+            <li><a href="/users/profile/edit">My Playthroughs</a></li>
+
+            <li><a href="/users/profile/edit">Profile</a></li>
+            <!--change user picture, about me (types of games I like,  my interests)-->
+            <li><a href="/users/profile/account-settings">Account Settings</a></li>
+            <!--change email-->
+            <!--user can add games to the list, as well as favourite playthroughs for each game-->
+            <li><a href="/users/profile/edit">Sign Out</a></li> <!-- logout is also available from this panel -->
+
+
+        </nav>
+    </aside>
+
+
+    <div class="user-profile-panel">
+        <h1 class="user-action-title">Edit Profile</h1>
+
+
+        <div class="user-profile-section" name="profile-edit-container">
+            <!-- the respective page from the user's profile is visualized here - Switch between sections-->
+
+            <!-- profile-edit here-->
+            <form>
+                <label for="profile-image">Change profile image:</label>
+                <!-- field type, placeholder http, submit button?-->
+                <input id="profile-image" name="profile-image" placeholder="Figure out how to browse local files">
+                <!-- TODO:  if link doesn't yield an image? -->
+                <!-- checkboxes multiple choice; TODO: add icons for each genre-->
+                <fieldset>
+                    <legend>Favorite Game Genres:</legend>
+
+                    <div>
+                        <input type="checkbox" id="rpg" name="rpg" checked>
+                        <label for="rpg">RPG</label> <!-- label for="id of the input element"-->
+                    </div>
+
+                    <div>
+                        <input type="checkbox" id="fps" name="fps">
+                        <label for="fps">FPS</label>
+                    </div>
+                </fieldset>
+
+
+                <label for="about-me">About me</label>
+                <textarea id="about-me" placeholder="Tell us a bit about yourself."></textarea>
+
+                <!-- TODO: one submit button for all?-->
+                <button class="link-button btn btn-info w-50">Submit</button>
+
+
+            </form>
+
+        </div>
+    </div>
+
+
+    <!-- Account Settings Section-->
+    <p>Change email address: </p>
+    <input type="email">
+
+
+</main>
+
+</body>
+
+</html>

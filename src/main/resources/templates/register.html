@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+>
+<head th:replace="fragments/common::head"></head>
+<body>
+<header th:replace="fragments/common::nav"></header>
+<main>
+    <h1 class="border-bottom mb-5">Register</h1>
+    <hr class="hr-3 w-25 bg-white"/>
+
+    <form th:object="${userRegisterBindingModel}"
+          th:method="POST" th:action="@{/users/register}"
+          class="form-width mx-auto w-25 bg-blur rounded">
+        <div class="form-group">
+            <div class="label-holder textCol d-flex justify-content-center">
+                <label for="username" class="white-text h4 mb-2 text-white">Username</label>
+            </div>
+
+            <input th:field="*{username}"
+                   th:errorclass="'is-invalid alert-danger'"
+                   type="text" class="form-control" id="username"
+                   name="username"/>
+            <small th:if="${#fields.hasErrors('username')}" th:errors="*{username}"
+                   class="invalid-feedback text-danger">
+                Username error message</small>
+            <!-- @Valid BindingModel, but existing unique value in DB -->
+            <small th:if="${usernameTaken}"  class="invalid-feedback text-danger">
+                A user with that name already exists.</small>
+        </div>
+
+        <div class="form-group">
+            <div class="label-holder text-white textCol d-flex justify-content-center">
+                <label for="email" class="white-text h4 mb-2">Email</label>
+            </div>
+            <input th:field="*{email}"
+                   th:errorclass="'is-invalid alert-danger'"
+                   type="email" class="form-control" id="email"
+                   name="email"/>
+            <small th:if="${#fields.hasErrors('email')}" th:errors="*{email}"
+                   class="invalid-feedback text-danger">
+                Email error message</small>
+            <!-- @Valid BindingModel, but existing unique value in DB -->
+            <small th:if="${emailTaken}"  class="invalid-feedback text-danger">
+                A user with that email already exists.</small>
+        </div>
+
+        <div class="form-group">
+            <div class="label-holder text-white textCol d-flex justify-content-center">
+                <label for="password" class="white-text h4 mb-2">Password</label>
+            </div>
+            <input th:field="*{password}"
+                   th:errorclass="'is-invalid alert-danger'"
+                   type="password" class="form-control" id="password"
+                   name="password"/>
+            <small th:if="${#fields.hasErrors('password')}" th:errors="*{password}"
+                   class="invalid-feedback text-danger">
+                Password error message</small>
+        </div>
+
+        <div class="form-group">
+            <div class="label-holder text-white textCol d-flex justify-content-center">
+                <label for="confirmPassword" class="white-text h4 mb-2">Confirm Password</label>
+            </div>
+            <input th:field="*{confirmPassword}"
+                   th:errorclass="'is-invalid alert-danger'"
+                   type="password" class="form-control" id="confirmPassword"
+                   name="confirmPassword"/>
+            <small th:if="${#fields.hasErrors('password')}" th:errors="*{password}"
+                   class="invalid-feedback text-danger">
+                Password error message</small>
+
+            <div class="col-sm-10">
+                <small th:if="*{password != confirmPassword}"
+                       class="invalid-feedback text-danger">
+                    Passwords don't match.
+                </small>
+            </div>
+        </div>
+
+        <div class="form-width row g-3 align-items-center">
+            <button type="submit"  class="link-button btn btn-info w-50" value="Register">Register</button>
+        </div>
+
+    </form>
+</main>
+
+</body>
+
+</html>

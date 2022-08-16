@@ -1,0 +1,687 @@
+body {
+    background-color: #03080E;
+    background-blend-mode: color-dodge;
+    /** background-blend-mode: luminosity; */
+    position: relative;
+    background-image: url(https://res.cloudinary.com/dyv2crejp/image/upload/v1660128935/Gamevision/Images/Design/blue-gaming-background_Legend-of-the-White-Snake-Lady-Slot-Machine-YGGDRASIL_zntleb.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+
+#main-navbar {
+    display: block;
+    background-color: #131A21;
+    width: 100%;
+}
+
+#left-navbar {
+    float: left;
+}
+
+#right-navbar {
+    float: right;
+}
+
+#center-navbar {
+    display: flex;
+    justify-content: center;
+    margin-left: 20%;
+    margin-right: 20%;
+}
+
+#admin-navbar {
+    margin-left: 33%;
+}
+
+/** USER PROFILE ***********************************************/
+.side-nav {
+    width: 15%;
+    float: left;
+    position: absolute;
+    display: inline-block;
+
+}
+
+.user-profile-panel {
+    width: 80%;
+    display: inline-block;
+    margin-left: 15%;
+}
+
+.profile-edit-container {
+    float: left;
+    display: inline-block;
+}
+
+
+.side-nav li a, .navbar ul li a, #logout-btn {
+    font-size: 1vw;
+    font-family: 'Electrolize', serif;
+    color: #7abcdd;
+    text-transform: uppercase;
+    display: inline;
+    line-height: 38px;
+    width: 100%;
+    background: inherit;
+}
+
+#link-to-admin-panel {
+    margin-left: 100%;
+}
+
+/** Override Bootstrap's NAV text white background color on hover etc. */
+.nav > li > a:focus, .nav > li > a:hover, .input-btn a:focus, .input-btn a:hover, #logout-btn a:hover {
+    text-decoration: underline;
+    font-weight: bold;
+    color: #58dde3;
+    font-size: 1.2em;
+    background-color: #131a21;
+}
+
+
+.logout-btn-container {
+    display: inline-block;
+    margin-top: 9%;
+    border: 0;
+    outline: none;
+}
+
+#login-btn {
+    display: block;
+    margin-top: 20%;
+    margin-left: 20%;
+    border: 0;
+
+}
+
+/** display: inline   -> height: has no effect */
+/** also keeps footer in place */
+main {
+    position: relative;
+    display: block;
+    margin: auto;
+    width: 90%;
+    height: 90%;
+}
+
+.content-wrapper {
+    display: block;
+
+}
+
+
+/** margin: 2rem auto 4rem;
+  width: 90%;
+  max-width: 70rem;
+  */
+
+/** Carousel */
+#carouselContainer {
+    margin-top: 20vh;
+    margin-bottom: 20vh;
+    height: 47vh;
+}
+
+.carousel-inner {
+    background-color: black !important;
+    margin-top: 10vh;
+}
+
+.carousel-inner > div > img {
+    display: inline-block;
+    float: left;
+}
+
+.carousel-caption {
+    padding-left: 10px;
+    margin-left: 150px;
+    display: inline-block;
+    float: right;
+    width: 100%;
+}
+
+h1 {
+    font-size: 2rem;
+    font-weight: bold;
+    color: white;
+    margin: 5% 3% 3% 3%;
+    text-align: center;
+}
+
+h3 {
+    font-size: 1rem;
+    font-weight: bold;
+    color: white;
+    margin: 5px;
+    text-align: left;
+}
+
+/** .carousel-caption p {
+    font-size: 12px;
+} */
+p {
+    font-size: 1.25rem;
+    max-width: 75ch;
+    color: white;
+}
+
+img {
+    max-width: 100%;
+    object-position: bottom right; /** anchor when resizing */
+}
+
+/**  position: relatve; */
+figure {
+    margin: 2rem 0;
+    display: inline-block;
+}
+
+figure img {
+    display: block;
+}
+
+.card {
+    margin: 10px;
+}
+
+.story-button {
+    background-color: #03080E;
+}
+
+/** To push footer to the bottom */
+.spacer-about {
+    padding: 21%;
+    flex: 1;
+}
+
+
+.card-image-container {
+    display: inline;
+
+}
+
+
+/** .spacer-home {
+    padding: 10%;
+    flex: 1;
+} */
+
+/**
+.section-format {
+    text-align: center;
+    font-size: 17px;
+    color: white;
+}
+.section-format h1 {
+    font-size: 25px;
+    font-weight: bold;
+    margin: 5vh;
+}
+*/
+.hero {
+    height: 80vh;
+    max-height: 40rem;
+}
+
+.game-details-section {
+    margin: auto;
+    width: 60%;
+    height: 60%;
+}
+
+.card-title {
+    font-size: 20px;
+    font-weight: bold;
+    color: white;
+    text-decoration: underline;
+    margin-top: 5px;
+    margin-bottom: 7px;
+}
+
+.card-text {
+    font-size: 17px;
+}
+
+.card-body {
+    background-color: #131A21;
+}
+
+.card-title-img {
+    width: 100%;
+}
+
+.bottom-card-text {
+    margin: 5px;
+    color: #6C8BF4;
+}
+
+/**
+.title-image-container {
+    display: inline-block;
+    margin: 5px;
+}
+*/
+.game-title-image {
+    height: 50%;
+    width: 50%;
+    object-fit: contain;
+    float: left;
+    margin-right: 30px;
+    margin-bottom: 20px; /** fit container, keep ratio */
+}
+
+.description-text {
+    text-align: justify;
+    font-size: 25px;
+    max-width: 100%;
+}
+
+.genres-container {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    float: top;
+}
+
+/** default font-size is font-size: 1.25rem;*/
+.genres-container p {
+    color: lightblue;
+    font-style: italic;
+    display: inline;
+    float: left;
+}
+
+/** list bullet   styling to force bullets   class="game-view-genres-ul" */
+ul {
+    display: inline;
+    list-style-type: disc;
+    float: left;
+}
+
+.genres-list li {
+    list-style: none;
+    float: left;
+    color: lightblue;
+    font-style: italic;
+    font-size: 1.25rem;
+}
+
+/** content is the bullet */
+.genres-list li:before {
+    content: '\2022';
+    margin-left: 1em;
+    margin-right: 1em;
+}
+
+/** .playthrough-card-container{
+position: relative;
+} */
+.playthrough-list-caption {
+    font-weight: bold;
+    color: #3dd5f3;
+    margin: 3%;
+    text-align: center;
+    font-size: 27px;
+    padding-left: 30%;
+    display: block;
+    width: 100%;
+}
+
+.buttons-container {
+    margin: 1vh;
+    display: flex;
+    justify-content: center;
+    float: left;
+    width: 100%;
+}
+
+/**  width: auto; fixes text overflowing from button */
+.link-button {
+    object-position: bottom;
+    display: inline-block;
+    float: left;
+    bottom: 0;
+    margin: 1%;
+    width: auto;
+    font-size: 115%;
+}
+
+.buttons-container button, a {
+    display: inline-block;
+    margin: 1%;
+    float: left;
+}
+
+.hr-separator {
+    display: block;
+    width: 100%;
+    margin-top: 1%;
+    position: relative;
+    float: left;
+}
+
+/****************************************************** games-all */
+.game-card-container {
+    left: 30%;
+}
+
+.game-card {
+    width: 50%;
+    margin-left: 25%;
+    margin-bottom: 3%;
+}
+
+
+/**================================================HOME HOME - ------------------------------------------*/
+.homepage-title-container {
+    display: block;
+}
+
+.no-games-quote {
+    color: white;
+    font-size: 1.5rem;
+    font-weight: bold;
+    font-style: italic;
+    text-align: center;
+}
+
+.no-games-author {
+    color: white;
+    font-size: 1.2rem;
+    font-style: italic;
+    text-align: center;
+    padding-left: 20%;
+    margin-top: 1.5%;
+}
+
+/** game cards */
+.home-card-container {
+    display: block;
+    left: 30%;
+    float: top;
+}
+
+
+.home-card-title-img {
+    height: 22vh;
+    width: 50vw;
+}
+
+
+.home-game-card {
+    width: 20%;
+    height: 30%;
+    display: inline-block;
+    float: left;
+}
+
+
+.home-game-card:hover {
+    width: 23%; /** increase width only, increased height pushes other cards away from the intuitive click spot */
+    border: 3px solid dodgerblue;
+}
+
+/**----------------------------------------------------------------------------*/
+/** Playthroughs */
+.playthrough-card {
+    margin: 1%;
+    padding-left: 25%;
+    position: relative;
+    width: 100%;
+    float: left;
+    display: block;
+}
+
+.video-container {
+    display: inline-block;
+    padding-top: 10%;
+    padding-right: 3%;
+    overflow: hidden;
+    object-position: bottom right;
+    float: left;
+}
+
+/** style the iframe of the video */
+iframe {
+    object-position: top;
+    width: 70%;
+    display: block;
+}
+
+.playthrough-info-container {
+    width: 100%;
+    height: 10%;
+    margin: 1%;
+    padding-bottom: 2%;
+    display: block;
+    float: left;
+    bottom: 0;
+}
+
+.playthrough-description {
+    display: block;
+    float: left;
+    margin: 3%;
+}
+
+.playthrough-title {
+    font-weight: bold;
+    font-size: 20px;
+    text-align: center;
+    float: left;
+    display: block;
+}
+
+.playthrough-info-container p {
+    font-size: 16px;
+    float: left;
+    display: block;
+}
+
+.playthrough-feedback-container {
+    display: block;
+    float: left;
+    margin: 1%;
+    height: 3%;
+    width: 100%;
+}
+
+label {
+    color: white;
+}
+
+/**++++++++++++++++++++++ GAME VIEW WITH COMMENTS++++++++++++++++++++++++++ */
+/** TODO: fix these tree feedback elements */
+
+.comments-heading-container {
+    display: flex;
+    top: 65%;
+    left: 50%;
+    width: 100%;
+    margin: 1%;
+    padding-left: 43%;
+}
+
+/** comments */
+.comments-section {
+    display: block;
+    float: top;
+    margin: 3%;
+}
+
+.comments-container {
+    display: block;
+    float: top;
+    width: 100%;
+}
+
+.comment-container {
+    display: inline-block;
+    float: top;
+    width: 100%;
+    margin: 1.5%;
+}
+
+/** .comments-panel {
+    display: block;
+    position: absolute;
+}
+
+*/
+
+
+/** Posted by: {username}*/
+.comment-container h4 {
+    font-style: italic;
+    color: lightblue;
+    font-size: 12px;
+    display: block;
+    float: top;
+}
+
+.comment-container p {
+    font-size: 15px;
+}
+
+/** input "button" */
+/**
+#postComment {
+    width: auto;
+    font-size: 115%;
+    margin: 0;
+    float: left;
+    color: #fff;
+    background-color: #5bc0de;
+    border-color: #46b8da;
+    padding: 1%;
+}
+*/
+.like-button {
+    display: inline-block;
+    object-position: bottom;
+    padding: 0.5%;
+    float: left;
+    bottom: 0;
+    margin: 0.5%;
+    font-size: 12px;
+}
+
+.likes-counter-div {
+    display: inline-block;
+    float: left;
+    color: white;
+    font-size: 12px;
+    font-style: italic;
+    bottom: 0;
+    margin-top: 1%;
+    margin-left: 1%;
+    padding: 1%;
+}
+
+.text-container {
+    text-align: justify;
+    font-size: 1.5vw;
+}
+
+/**
+.distribute-evenly{
+    display: flex;
+    justify-content: space-evenly;
+}
+*/
+/**
+.game-details-section > p{
+    display: inline-block;
+}
+*/
+/* Footer
+*/
+/**
+footer {
+    margin: auto;
+    text-align: center;
+    width: 100%;
+    display: block;
+}
+*/
+.about-us-article {
+    display: block;
+    position: absolute;
+    color: white;
+    font-size: 20px;
+    width: 90%;
+    left: 5%;
+}
+
+.red-alert {
+    background-color: red;
+}
+
+.form-width {
+    width: 30%;
+    display: block;
+    margin-left: 35%;
+    margin-right: 35%;
+}
+
+.white-text {
+    color: white;
+}
+
+/** User Profile */
+
+.vay-footer { /** Don't use bottom: 0; will cause it to float up incorrectly */
+    text-align: justify;
+    position: absolute;
+    top: 1800%;
+    margin: 1%;
+    width: 90%;
+    padding-left: 47%;
+    justify-content: space-around;
+}
+
+footer p {
+    color: gray;
+}
+
+
+/** ---------------------------------ERROR VISUALIZATION----------------------------- */
+.exception-message {
+    color: red;
+    font-weight: bold;
+}
+
+.error-section {
+    font-size: 2rem;
+    font-weight: bold;
+    color: white;
+    margin: 3%;
+    text-align: center;
+}
+
+/**
+Colors
+dark blue (old nav text color) color: #587e91;
+
+*/
+
+
+/** HOMEPAGE TESTING GROUND*/
+
+
+/**
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+*/

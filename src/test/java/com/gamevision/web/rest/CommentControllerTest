@@ -1,0 +1,97 @@
+package com.gamevision.web.rest;
+
+import java.util.List;
+
+import com.gamevision.errorhandling.exceptions.GameNotFoundException;
+import com.gamevision.model.view.CommentViewModel;
+import com.gamevision.service.CommentService;
+import com.gamevision.model.binding.CommentBindingModel;
+import com.gamevision.model.servicemodels.CommentAddServiceModel;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import org.junit.jupiter.api.Test;
+
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.test.context.support.WithMockUser;
+
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+//NOT this one //import static org.springframework.test.web.client.match.MockRestRequestMatchers.jsonPath;  //the one below
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import static org.hamcrest.Matchers.is;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+
+
+@SpringBootTest
+@AutoConfigureMockMvc
+public class CommentControllerTest {
+
+    @MockBean
+    private CommentService commentService;
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    @MockBean(name = "mockUserDetails")
+    private UserDetails userDetails;
+
+    private static final Long GAME_ID = 1L;
+    private static final String TEST_DATE_TIME_1 = "Sat Jul 30 2022 13:11:20 GMT+0300 (Eastern European Summer Time)";
+    private static final String TEST_DATE_TIME_2 = "Sat Jul 30 2022 14:21:20 GMT+0300 (Eastern European Summer Time)";
+    private static final Long NONEXISTENT_GAME_ID = 1001L;
+
+//TODO: error, cannot discover tests
+    //org.junit.platform.commons.JUnitException: TestEngine with ID 'junit-vintage' failed to discover tests
+    @Test
+    @WithMockUser(username = "testUsername")
+//    @WithUserDetails("mockUserDetails")
+    public void getComments_twoCommentsExist_commentsReturnedAsJsonAndStatusIsOk() throws Exception {
+        when(commentService.getAllCommentsForGame(GAME_ID)).thenReturn(List.of(
+                new CommentViewModel(1L, "Gabriel", "Test comment 1", 0, TEST_DATE_TIME_1),
+                new CommentViewModel(2L, "Bobby", "Test comment 2", 0, TEST_DATE_TIME_2)
+        ));
+
+        mockMvc.perform(get("/api/games/" + GAME_ID + "/comments"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.[0].authorUsername", is("Gabriel")))
+                .andExpect(jsonPath("$.[0].text", is("Test comment 1")))
+                .andExpect(jsonPath("$.[1].authorUsername", is("Bobby")))
+                .andExpect(jsonPath("$.[1].text", is("Test comment 2")));
+    }
+
+
+    @Test
+    @WithMockUser(username = "testUsername")
+    public void createCommentSuccessfully() throws Exception {
+        when(commentService.addComment(any())).thenAnswer(interaction -> {
+            CommentAddServiceModel commentAddServiceModel = interaction.getArgument(0);
+            return new CommentViewModel(1L, commentAddServiceModel.getAuthorName(), commentAddServiceModel.getText(), 0, TEST_DATE_TIME_1);
+        });
+        CommentBindingModel commentBindingModel = new CommentBindingModel("Test comment 1"); //only text
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        mockMvc.perform(post("/api/games/" + GAME_ID + "/comments")
+                        .content(objectMapper.writeValueAsString(commentBindingModel))
+                        .with(csrf())
+                        .contentType("application/json")
+                        .accept("application/json"))
+                .andExpect(status().is(201))
+                .andExpect(jsonPath("$.text", is("Test comment 1"))) //check fields - has text and authorUsername
+                .andExpect(jsonPath("$.authorUsername", is("testUsername")));
+    }
+
+
+
+
+}
