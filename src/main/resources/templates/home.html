@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en"
-      xmlns:th="http://www.thymeleaf.org"
->
+      xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/common::head"></head>
 
 <body>
@@ -13,15 +12,15 @@
 <main id="home-main" role="main" class="bg-dark">
 
 
-    <div id="homepage-title-container">
+
         <h1>Games of the Week</h1>
-        <section class="no-games-quote-container">
+
             <h2 class="no-games-quote" th:if="${noGames}" th:object="${noGames}" th:text="${noGames}"></h2>
             <h2 class="no-games-author" th:if="${quoteAuthor}" th:object="${quoteAuthor}" th:text="${quoteAuthor}"></h2>
-        </section>
 
 
-    </div>
+
+
 
     <!--th:each="game : ${carouselGames}" th:object="${game}">           th:class="${game.isFirst} ? 'item active':'item' -->
     <!-- Need to know which one is the first, as the first slide in the carousel needs an active attribute -->

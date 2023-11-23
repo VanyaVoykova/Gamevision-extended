@@ -1,7 +1,6 @@
 body {
     background-color: #03080E;
     background-blend-mode: color-dodge;
-    /** background-blend-mode: luminosity; */
     position: relative;
     background-image: url(https://res.cloudinary.com/dyv2crejp/image/upload/v1660128935/Gamevision/Images/Design/blue-gaming-background_Legend-of-the-White-Snake-Lady-Slot-Machine-YGGDRASIL_zntleb.jpg);
     background-repeat: no-repeat;
@@ -111,11 +110,6 @@ main {
 }
 
 
-/** margin: 2rem auto 4rem;
-  width: 90%;
-  max-width: 70rem;
-  */
-
 /** Carousel */
 #carouselContainer {
     margin-top: 20vh;
@@ -141,7 +135,7 @@ main {
     width: 100%;
 }
 
-h1 {
+h1, h2, p {
     font-size: 2rem;
     font-weight: bold;
     color: white;
@@ -157,9 +151,6 @@ h3 {
     text-align: left;
 }
 
-/** .carousel-caption p {
-    font-size: 12px;
-} */
 p {
     font-size: 1.25rem;
     max-width: 75ch;
@@ -202,23 +193,6 @@ figure img {
 }
 
 
-/** .spacer-home {
-    padding: 10%;
-    flex: 1;
-} */
-
-/**
-.section-format {
-    text-align: center;
-    font-size: 17px;
-    color: white;
-}
-.section-format h1 {
-    font-size: 25px;
-    font-weight: bold;
-    margin: 5vh;
-}
-*/
 .hero {
     height: 80vh;
     max-height: 40rem;
@@ -237,6 +211,7 @@ figure img {
     text-decoration: underline;
     margin-top: 5px;
     margin-bottom: 7px;
+    text-align: center;
 }
 
 .card-text {
@@ -256,12 +231,6 @@ figure img {
     color: #6C8BF4;
 }
 
-/**
-.title-image-container {
-    display: inline-block;
-    margin: 5px;
-}
-*/
 .game-title-image {
     height: 50%;
     width: 50%;
@@ -287,8 +256,8 @@ figure img {
 .genres-container p {
     color: lightblue;
     font-style: italic;
-    display: inline;
-    float: left;
+    text-align: left;
+
 }
 
 /** list bullet   styling to force bullets   class="game-view-genres-ul" */
@@ -299,19 +268,13 @@ ul {
 }
 
 .genres-list li {
-    list-style: none;
-    float: left;
+    list-style: circle;
     color: lightblue;
     font-style: italic;
     font-size: 1.25rem;
 }
 
-/** content is the bullet */
-.genres-list li:before {
-    content: '\2022';
-    margin-left: 1em;
-    margin-right: 1em;
-}
+
 
 /** .playthrough-card-container{
 position: relative;
@@ -522,13 +485,6 @@ label {
     margin: 1.5%;
 }
 
-/** .comments-panel {
-    display: block;
-    position: absolute;
-}
-
-*/
-
 
 /** Posted by: {username}*/
 .comment-container h4 {
@@ -658,6 +614,8 @@ footer p {
     margin: 3%;
     text-align: center;
 }
+
+
 
 /**
 Colors
