@@ -15,15 +15,13 @@ import org.springframework.security.crypto.password.Pbkdf2PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-
-//For some reason, the IDE cannot detect that the HttpSecurity bean is configured by Spring Boot. You can get rid of the error by adding @EnableWebSecurity to your configuration class, it solves it because the annotation imports the HttpSecurityConfiguration configuration class.
-@EnableWebSecurity
+@EnableWebSecurity //Imports HttpSecurityConfiguration, in case HttpSecurity bean is not detected by Spring Boot
 @Configuration
 public class GamevisionSecurityConfiguration {
 
-    //Here we have to expose 3 things:
-    // 1. PasswordEncoder @Bean
-    // 2. UserDetailsService (with user repo in constructor) @Bean
+    //Here we have to expose 3 @Beans:
+    // 1. PasswordEncoder
+    // 2. UserDetailsService (with user repo in constructor)
     // 3. SecurityFilterChain
 
 
@@ -39,11 +37,6 @@ public class GamevisionSecurityConfiguration {
 
     @Bean //defines which pages should require authentication / specific role - type http. to see them all
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        //    http.csrf().ignoringAntMatchers("https://www.youtube.com"); //to allow playthrough videos
-        // define which requests are allowed and which not
-
-        //  http.headers().frameOptions().sameOrigin().defaultsDisabled(); //for deleting playthroughs, SS doesn't like the <iframe> with the video
-
         //antMatchers ORDER MATTERS
         http.authorizeRequests()
                 // everyone can download static resources (css, js, images)
@@ -52,17 +45,14 @@ public class GamevisionSecurityConfiguration {
                 //.antMatchers("/**").permitAll()
 
                 .antMatchers("/admin/**", "/games/add", "/games/{id}/edit", "/games/{id}/delete", "/games/{id}/playthroughs/add").hasRole(UserRoleEnum.ADMIN.name())
-                //TODO: for some reason "/games/add" can be accessed by guests????? Shouldn't the POST antMatchers above be overridden?
 
-                //The only POST accessible to unauthenticated users
+                //The only POST accessible to guests
                 .antMatchers(HttpMethod.POST, "/users/register", "/users/login").anonymous()
 
-                .antMatchers(HttpMethod.GET, "/**", "/games/{id}", "/games/{id}/comments").permitAll() // everyone can GET               games/view/* - view a game, * is id; removed "/api/**"
+                .antMatchers(HttpMethod.GET).permitAll()
+                //.antMatchers(HttpMethod.GET, "/**", "/games/{id}", "/games/{id}/comments").permitAll() // everyone can GET               games/view/* - view a game, * is id; removed "/api/**"
                 //removed from above: "/about", "/users/forum", "/games/**", "/api/**"       "/games/{id}"   games/{id}/*",     "/games/all", "/games/{id}/playthroughs/all",
 
-
-                .antMatchers(HttpMethod.POST, "/**").authenticated() //only authenticated can POST; admin-specific and additional authorizations below
-                // removed api/games/{gameId}
 
                 // .antMatchers("/pages/moderators").hasRole(UserRoleEnum.MODERATOR.name()) ///games/{gameId}/playthroughs/add/(gameId=*{id})}" //uncomment for MODERATOR
 

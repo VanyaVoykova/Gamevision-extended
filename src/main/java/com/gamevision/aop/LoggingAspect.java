@@ -20,11 +20,10 @@ public class LoggingAspect {
 
     //  @AfterReturning(pointcut = "execution(* com.gamevision.service.impl.GameServiceImpl.addGame(..))") //SPACE after *
 
-    //Using @Around i/o @AfterReturning here so we can get acces to ProceedingJoinPoint which we need to get the Object (its fields are used in the logged messages)
-    @Around("execution(* com.gamevision.service.impl.GameServiceImpl.addGame(..))") //SPACE after *
-    public GameAddServiceModel afterAddGame(ProceedingJoinPoint pjp) throws Throwable { //JP is the addGameMethod //somehow can mess it up NOW???
-        // Object[] arguments = pjp.getArgs();
-        GameAddServiceModel gameAdded = (GameAddServiceModel) pjp.proceed(); //should return GameAddServiceModel if no exception is thrown
+    //Using @Around i/o @AfterReturning here so we can get access to ProceedingJoinPoint which we need to get the Object (its fields are used in the logged messages)
+    @Around("execution(* com.gamevision.service.impl.GameServiceImpl.addGame(..))")
+    public GameAddServiceModel afterAddGame(ProceedingJoinPoint pjp) throws Throwable { //JP is the addGameMethod
+          GameAddServiceModel gameAdded = (GameAddServiceModel) pjp.proceed();
 
         LocalDateTime timeCreated = LocalDateTime.now();
         String gameTitle = gameAdded.getTitle();
