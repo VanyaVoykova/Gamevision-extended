@@ -35,24 +35,21 @@ public class GamevisionSecurityConfiguration {
         return new GamevisionUserDetailsService(userRepository);
     }
 
-    @Bean //defines which pages should require authentication / specific role - type http. to see them all
+    @Bean //authentication is required only for likes and comments + admin & moderator functions
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        //antMatchers ORDER MATTERS
+        //antMatchers ORDER MATTERS - more specific rules go first
         http.authorizeRequests()
-                // everyone can download static resources (css, js, images)
-                .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-                //pages everyone can access - authentication is required only for likes and comments + admin & moderator functions
-                //.antMatchers("/**").permitAll()
-
                 .antMatchers("/admin/**", "/games/add", "/games/{id}/edit", "/games/{id}/delete", "/games/{id}/playthroughs/add").hasRole(UserRoleEnum.ADMIN.name())
-
                 //The only POST accessible to guests
                 .antMatchers(HttpMethod.POST, "/users/register", "/users/login").anonymous()
 
-                .antMatchers(HttpMethod.GET).permitAll()
-                //.antMatchers(HttpMethod.GET, "/**", "/games/{id}", "/games/{id}/comments").permitAll() // everyone can GET               games/view/* - view a game, * is id; removed "/api/**"
+                //FIXME: guests should see comments; check GameController * JS
+                .antMatchers(HttpMethod.GET, "/**", "/games/{id}", "/games/{id}/comments", "/games/{id}/playthroughs").permitAll() // everyone can view games, comments and playthroughs
                 //removed from above: "/about", "/users/forum", "/games/**", "/api/**"       "/games/{id}"   games/{id}/*",     "/games/all", "/games/{id}/playthroughs/all",
 
+                .antMatchers(HttpMethod.GET).permitAll()
+                // everyone can download static resources (css, js, images)
+                .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
 
                 // .antMatchers("/pages/moderators").hasRole(UserRoleEnum.MODERATOR.name()) ///games/{gameId}/playthroughs/add/(gameId=*{id})}" //uncomment for MODERATOR
 
@@ -106,7 +103,7 @@ public class GamevisionSecurityConfiguration {
         //add ; and remove the rest if you want to use cors
 
 
-        //todo add cors for Youtube - needed for playthrough videos
+        //todo add cors for Youtube - needed for playthrough videos (videos work ok)
 
         //TODO: COMMENT OUT these two, add ; above
         //cannot find csrf tokens if disabled, of course

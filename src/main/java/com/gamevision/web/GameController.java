@@ -63,7 +63,7 @@ public class GameController {
 
 
     //TODO: admins can see an "Add a playthrough" button
-    @GetMapping("/games/{id}") //Don't forget the ("id") in @PathVariable("id")
+    @GetMapping("/games/{id}")
     public String gamePage(@PathVariable("id") Long id, Model model) {
         GameViewModel gameViewModel = gameService.getGameViewModelById(id);
 
