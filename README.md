@@ -10,8 +10,9 @@ Administrators can promote (to administrator) or demote (to user) users, add and
 <h2>Built with:</h2>
 <ul>
         <li>Java</li>
-         <li>Spring</li>
-         <li>MySQL</li>
-         <li>Bootstrap</li>
+        <li>Spring</li>
+        <li>MySQL</li>
+        <li>Bootstrap</li>
+        <li>Thymeleaf</li>
 </ul>
 

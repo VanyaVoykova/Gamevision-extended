@@ -44,7 +44,7 @@ public class GamevisionSecurityConfiguration {
                 .antMatchers(HttpMethod.POST, "/users/register", "/users/login").anonymous()
 
                 //FIXME: guests should see comments; check GameController * JS
-                .antMatchers(HttpMethod.GET, "/**", "/games/{id}", "/games/{id}/comments", "/games/{id}/playthroughs").permitAll() // everyone can view games, comments and playthroughs
+                .antMatchers(HttpMethod.GET, "/games/{id}/comments", "/api/games/{id}/comments", "/games/{id}/playthroughs", "/games/{id}").permitAll() // everyone can view games, comments and playthroughs
                 //removed from above: "/about", "/users/forum", "/games/**", "/api/**"       "/games/{id}"   games/{id}/*",     "/games/all", "/games/{id}/playthroughs/all",
 
                 .antMatchers(HttpMethod.GET).permitAll()

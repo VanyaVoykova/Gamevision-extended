@@ -9,9 +9,7 @@ const csrfHeaderValue = document.head.querySelector('[name=_csrf]').content
 const commentsContainer = document.getElementById('comments-container')
 
 
-window.onload = loadComments //load comments first - not async as adding new comments gets broken if we don't GET them first
-//seems to work alright with the current async/non-async setup
-
+window.onload = loadComments
 
 async function handleFormSubmission(event) {
     event.preventDefault()
@@ -62,27 +60,23 @@ function commentAsHtml(comment) { //comment is an Object, get its text field
     commentHtml += `</div>\n`
 
     return commentHtml
-
 }
 
 
-//Seems to work fine w/o async
 function loadComments() {
     try {
-        fetch(`http://localhost:8080/api/games/${gameId}/comments`, { //` is for literal, needed to plonk gameId
+        fetch(`http://localhost:8080/api/games/${gameId}/comments`, {
             headers: {
                 "Accept": "application/json"
             }
         }).then(res => res.json())
             .then(data => {
                 for (let comment of data) {
-                    commentsContainer.innerHTML += commentAsHtml(comment) //wasn't adding it...
+                    commentsContainer.innerHTML += commentAsHtml(comment)
                 }
             })
     } catch (error) {
-        document.getElementById("comment-errors").textContent = "Error";
-        //TODO: remove these debuggers
-        console.log(error.message)
+        document.getElementById("comment-errors").textContent = "Error loading comments.";
         window.alert(error.message)
     }
 }

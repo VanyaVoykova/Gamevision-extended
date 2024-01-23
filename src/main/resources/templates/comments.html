@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="fragments/common::head"></head>
+<body>
+<header th:replace="fragments/common::nav"></header>
+<input type="hidden" name="gameId" id="gameId" th:object="${game}" th:value="${game.id}">
+<!-- for JS and REST - right after header -->
+<!-- todo: check if th:object here is OK  th:object="${game}"  -->
+<main th:object="${game}">
+    <!-- TODO: check position For REST controller -->
+    <!-- hero game-details-section -->
+    <section class="game-view-section section-format py-5">
+        <h1 th:text="*{title}">Game Title</h1>
+        <h2>Comments</h2>
+        <!-- maybe a carousel with screenshots here if time permits -->
+        <!--  <figure> -->
+        <img alt="Game title image" class="game-title-image"
+             th:src="*{titleImageUrl}">
+
+        <hr class="hr-separator">
+
+    </section>
+
+    <section ${game} class="comments-section th:object=">
+
+        <small id=" comment-errors"></small>
+
+        <!----------------------------------------------- COMMENTS SUBMISSION FORM---------------------------------------------------->
+        <div class="comments-panel">
+            <form action="/" id="commentForm" method="POST" sec:authorize="isAuthenticated()">
+                <input th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
+                <div class="form-group">
+                                      <textarea class="form-control"
+                                                cols="30"
+                                                id="comment"
+                                                maxlength="3000"
+                                                minlength="10"
+                                                name="comment"
+                                                required
+                                                rows="5">
+                                      </textarea>
+                </div>
+                <section class="form-group">
+                    <input class="btn link-button btn btn-info w-50"
+                           id="postComment"
+                           type="submit"
+                           value="Leave a comment"/>
+                </section>
+
+            </form>
+
+            <!-- script inserts comments in #comments-container -->
+            <div id="comments-container"></div>
+        </div>
+    </section>
+</main>
+
+<script th:src="@{/scripts/comments.js}"></script> <!-- for REST controller -->
+<script th:src="@{/scripts/delete-confirm.js}"></script> <!-- for delete button functionality -->
+
+</body>
+
+</html>
