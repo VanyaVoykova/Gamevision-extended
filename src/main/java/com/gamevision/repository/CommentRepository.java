@@ -9,5 +9,5 @@ import java.util.List;
 
 @Repository
 public interface CommentRepository extends JpaRepository<CommentEntity, Long> {
-   // List<CommentEntity> findAllByGame(GameEntity game); <- error - after refactoring CommentEntity no longer holds a reference to game
+   // List<CommentEntity> findAllByGame(GameEntity game); <- FIXME error - after refactoring CommentEntity no longer holds a reference to game
 }

@@ -30,22 +30,11 @@ public class CommentServiceImpl implements CommentService {
         this.userService = userService;
     }
 
-//TODO LocalDateTime dateTimeCreated
     @Override
     public List<CommentViewModel> getAllCommentsForGame(Long gameId) {
         GameEntity game = gameService.getGameById(gameId); //throws GameNotFoundException
 
-      // List<CommentViewModel> commentViewModels = game.getComments().stream()
-      //         .map(this::mapCommentEntityToCommentViewModel).collect(Collectors.toList());
-
-      // for (CommentViewModel comment : commentViewModels){
-      //     System.out.println("From Service: comment text: " + comment.getText());
-      // }
-//TODO sort by date, then make the date into a STRING, so it can be parsed in JS
-        //make date into a String in the VM,
-
-        //Sort the comments by LocalDateTime as entities, then map them .map(this::mapCommentEntityToCommentViewModel) where the date is just a String to be parsed by comments.js
-        return  game.getComments().stream()
+        return game.getComments().stream()
                 .sorted(Comparator.comparing(CommentEntity::getDateTimeCreated)).map(this::mapCommentEntityToCommentViewModel).collect(Collectors.toList()); //sorted by date
 
     }
@@ -64,22 +53,13 @@ public class CommentServiceImpl implements CommentService {
         commentEntity
                 .setAuthor(author)
                 .setText(commentAddServiceModel.getText())
-                .setLikesCounter(0) //initialize with 0 likes
+                .setLikesCounter(0)
                 .setDateTimeCreated(LocalDateTime.now());
 
         CommentEntity savedCommentEntity = commentRepository.save(commentEntity); //use to get commentId
 
         game.getComments().add(savedCommentEntity);
-        gameService.saveGame(game); //update game entity
-        //Return view model, so we can add it visually
-
-     //   CommentViewModel addedComment = new CommentViewModel();
-     //   addedComment
-     //           .setId(savedCommentEntity.getId())
-     //           .setAuthorUsername(commentAddServiceModel.getAuthorName())
-     //           .setText(commentAddServiceModel.getText())
-     //           .setLikesCounter(0);
-//
+        gameService.saveGame(game);
 
         return mapCommentEntityToCommentViewModel(savedCommentEntity);
     }
@@ -92,8 +72,7 @@ public class CommentServiceImpl implements CommentService {
                 .setAuthorUsername(entity.getAuthor().getUsername())
                 .setText(entity.getText())
                 .setLikesCounter(entity.getLikesCounter())
-               // .setDateTimeCreated(entity.getDateTimeCreated())// make it String
-        .setDateTimeCreated(entity.getDateTimeCreated().toString());
+                .setDateTimeCreated(entity.getDateTimeCreated().toString());
 
         return commentViewModel;
 

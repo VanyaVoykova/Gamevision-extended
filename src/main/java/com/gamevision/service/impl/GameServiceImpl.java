@@ -35,7 +35,6 @@ public class GameServiceImpl implements GameService {
     private final GenreRepository genreRepository;
     private final ModelMapper modelMapper;
 
-    //Just uncouple PlaythroughEntity from GameEntity @Lazy PlaythroughService to avoid cycling dependency problem (encountered while trying to delete a PlaythroughEntity)
     public GameServiceImpl(GameRepository gameRepository, UserRepository userRepository, GenreRepository genreRepository, ModelMapper modelMapper) {
         this.gameRepository = gameRepository;
         this.userRepository = userRepository;
@@ -43,32 +42,26 @@ public class GameServiceImpl implements GameService {
         this.modelMapper = modelMapper;
     }
 
-    //Skip pagination for now
-    //@Cacheable("games") //disabled in order to show add game functionality, or added game won't be displayed right away
     @Override
-    public Page<GameCardViewModel> getAllGames(Pageable pageable) { //Page, not list!!!
-        //TODO: check if Limit description length for game cards works correctly
-        //no stream, no collect to list, returning Page instead
+    public Page<GameCardViewModel> getAllGames(Pageable pageable) {
         return gameRepository.findAll(pageable)
                 .map(this::mapGameEntityToCardView);
     }
 
-    //Get 7 random games for the Home page
-    // @Cacheable("carouselGames")
     @Override
     public List<GameCarouselViewModel> getGamesForCarousel() {
         List<GameCardViewModel> allGamesCardViews = gameRepository.findAll().stream().map(this::mapGameEntityToCardView).collect(Collectors.toList());
+
         if (allGamesCardViews.isEmpty()) {
-            return null; //so controller knows there are no games right away and we can skip the rest of the operations
+            return null;
         }
 
-        Collections.shuffle(allGamesCardViews); //shuffle the indexes
-        int maxIndex = Math.min(10, allGamesCardViews.size()); //last index excluded, so it should take all the way to the last if games are fewer; 10 games
+        Collections.shuffle(allGamesCardViews);
+        int maxIndex = Math.min(10, allGamesCardViews.size()); //last index excluded, so it should take all the way to the last if size < 10
         List<GameCardViewModel> gamesOfTheWeekCardViews = allGamesCardViews.subList(0, maxIndex);
 
-
-        //no time to map entity directly to carousel item, which needs just one more field to mark the first item for the necessary "active" attribute
         List<GameCarouselViewModel> carouselGames = new ArrayList<>();
+
         for (GameCardViewModel cardView : gamesOfTheWeekCardViews) {
             GameCarouselViewModel carouselView = new GameCarouselViewModel()
                     .setId(cardView.getId())
@@ -103,29 +96,25 @@ public class GameServiceImpl implements GameService {
 
     @Override
     public GameAddServiceModel addGame(GameAddBindingModel gameAddbindingModel) {
-        //Check if title doesn't already exist - must be unique!
         GameEntity existingGameWithTitle = gameRepository.findByTitle(gameAddbindingModel.getTitle()).orElse(null);
+
         if (existingGameWithTitle != null) { //game with that name EXISTS
             throw new GameTitleExistsException(); //"A game with that title already exists."
         }
 
         UserEntity addedByUser = userRepository.findByUsername(gameAddbindingModel.getAddedBy()).orElseThrow(UserNotFoundException::new);
-
         GameEntity gameToAdd = modelMapper.map(gameAddbindingModel, GameEntity.class); //maps it alright
-
-        //todo test new lines
-        //   gameToAdd.setDescription(String.format(gameAddbindingModel.getDescription()).replaceAll(""));
 
         gameToAdd.setAddedBy(addedByUser);
 
-        //List<String> in SM -> Set<GenreEntity> in GameEntity; list in SM never empty
+        //List<String> in Service Model -> Set<GenreEntity> in GameEntity; list in SM never empty
         Set<GenreEntity> genres = new LinkedHashSet<>(); //LHS to keep them ordered as they appear in the enum for consistency - easy to compare games visually
         for (String genreName : gameAddbindingModel.getGenres()) {
             GenreEntity genreEntity = genreRepository.findByName(GenreNameEnum.valueOf(genreName)); //entity's name is GenreNameEnum - RPG(Role-playing), ....
             genres.add(genreEntity);
         }
 
-        gameToAdd.setGenres(genres); //added all at once
+        gameToAdd.setGenres(genres);
         //ADD EMPTY COLLECTIONS or they are null, MM won't initialize empty collections!!!
         gameToAdd.setPlaythroughs(new HashSet<>());
         gameToAdd.setComments(new LinkedHashSet<>()); //Linked to keep order of addition
@@ -135,15 +124,13 @@ public class GameServiceImpl implements GameService {
         return new GameAddServiceModel()
                 .setId(addedGameFromRepo.getId())
                 .setTitle(addedGameFromRepo.getTitle())
-                .setAddedBy(addedGameFromRepo.getAddedBy().getUsername()); //it's not null here, holds the id and all but the controller still blows up?!?
+                .setAddedBy(addedGameFromRepo.getAddedBy().getUsername());
     }
 
     @Override //Doesn't include playthroughs
     public void editGame(Long gameId, GameEditServiceModel gameEditServiceModel) {
-        //We need the id!!
-        // 1. Pull orignal GameEntity to be edited from the repo
+
         GameEntity gameToEdit = gameRepository.findById(gameId).orElseThrow(GameNotFoundException::new);
-        // 2. check the new title - if another gameEntity (with ANOTHER id) does not have it in order to keep titles UNIQUE
         GameEntity existingGameWithSameTitleAsTheNewTitle = gameRepository.findByTitle(gameEditServiceModel.getTitle()).orElse(null); //if null -> OK, proceed
 
         //Ensure it's a DIFFERENT game, so you don't get "A game with that title already exists." because you found the game you want to edit (same id).
@@ -156,13 +143,13 @@ public class GameServiceImpl implements GameService {
                 .setTitleImageUrl(gameEditServiceModel.getTitleImageUrl())
                 .setDescription(gameEditServiceModel.getDescription());
 
-        gameToEdit.getGenres().clear(); //Clear the existing genres first //entity getters don't return unmodifiable collections AFAIK
+        gameToEdit.getGenres().clear();
         for (String genreName : gameEditServiceModel.getGenres()) {
             GenreEntity genreEntity = genreRepository.findByName(GenreNameEnum.valueOf(genreName)); //entity's name is GenreNameEnum - RPG(Role-playing), ....
             gameToEdit.getGenres().add(genreEntity);
         }
 
-        gameRepository.save(gameToEdit); //don't forget to update the entity
+        gameRepository.save(gameToEdit);
     }
 
     @Override
@@ -205,7 +192,7 @@ public class GameServiceImpl implements GameService {
         return gameRepository.findById(id).orElseThrow(GameNotFoundException::new);
     }
 
-    @Override //good practice to not have another service work directly with a repo not holding its entity
+    @Override
     public GameEntity saveGame(GameEntity gameEntity) {
 
         return gameRepository.save(gameEntity);
@@ -216,7 +203,7 @@ public class GameServiceImpl implements GameService {
 
         GameEntity entityToDelete = gameRepository.findById(id).orElseThrow(GameNotFoundException::new);
         entityToDelete.getPlaythroughs().clear(); //delete all playthroughs to ensure none are left orphaned
-        gameRepository.save(entityToDelete); //update
+        gameRepository.save(entityToDelete);
         gameRepository.deleteById(id);
     }
 
@@ -225,7 +212,7 @@ public class GameServiceImpl implements GameService {
         GameEntity gameToLoseAPlaythrough = gameRepository.findById(gameId).orElseThrow(GameNotFoundException::new);
         PlaythroughEntity playthroughToRemove = gameToLoseAPlaythrough.getPlaythroughs().stream().filter(playthrough -> playthrough.getId().equals(playthroughId)).findFirst().get();
         gameToLoseAPlaythrough.getPlaythroughs().remove(playthroughToRemove); //removed from the GameEntity's Set<PlaythroughEntity>
-        gameRepository.save(gameToLoseAPlaythrough); //update game
+        gameRepository.save(gameToLoseAPlaythrough);
     }
 
     @Override
@@ -237,18 +224,15 @@ public class GameServiceImpl implements GameService {
                 .collect(Collectors.toList());
         gameCardView.setGenres(genresAsStrings);
 
-        //GenreEntity to List<String>
-
 
         //Prevent out of bounds when description length is shorter
-        int maxLength = Math.min(gameEntity.getDescription().length(), 400); //limit shortened description to 400 chars
+        int maxLength = Math.min(gameEntity.getDescription().length(), 400);
 
         //ViewModel's .getDescription() will be null when pre-mapping, get it from the entity and set it separately
         String rawShortDescriptionCut = gameEntity.getDescription().substring(0, maxLength);
-        //for testing purposes, there may be gibberish with no white spaces, so in this case we can't use white space as a reference where to cut the String
-        //System.out.println(rawShortDescriptionCut.lastIndexOf(" "));
+
         if (rawShortDescriptionCut.lastIndexOf(" ") == -1) { //-1 if there are no intervals
-            gameCardView.setDescription(rawShortDescriptionCut + "..."); //goal is to avoid cutting mid-word
+            gameCardView.setDescription(rawShortDescriptionCut + "...");
         } else { //there are intervals
             String shortDescriptionCutAtLastWhitespace = rawShortDescriptionCut.substring(0, rawShortDescriptionCut.lastIndexOf(" ")) + "...";
             gameCardView.setDescription(shortDescriptionCutAtLastWhitespace); //goal is to avoid cutting mid-word

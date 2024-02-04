@@ -33,15 +33,11 @@ public class AdminServiceImpl implements AdminService {
         UserEntity userToPromote = userRepository.findByUsernameIgnoreCase(username).orElseThrow(UserNotFoundException::new);
         UserRoleEntity adminRole = userRoleRepository.findByName(UserRoleEnum.ADMIN).orElse(null); //should never be null
 
-        //skip check for now, it shouldn't impair the app too much if it's rewritten
-        // if (userToPromote.getUserRoles().contains(adminRole)) {
-        //     throw new UserIsAlreadyAdminException();
-        // }
-
         userToPromote.getUserRoles().add(adminRole);
 
-        userRepository.save(userToPromote); //Update!!!!
+        userRepository.save(userToPromote);
 
+        //TODO: UX check if user already is admin
 
         return userService.getUserVmByUsername(username);
     }
@@ -51,29 +47,24 @@ public class AdminServiceImpl implements AdminService {
         UserEntity userToDemoteToUser = userRepository.findByUsernameIgnoreCase(username).orElseThrow(UserNotFoundException::new);
         UserRoleEntity userRole = userRoleRepository.findByName(UserRoleEnum.USER).orElse(null); //should never be null
 
-        //Just for better UX so admins can see if someone cannot be demoted further   | no time to implement now, got to add ExceptionHandler etc. todo
-        // UserRoleEntity adminRole = userRoleRepository.findByName(UserRoleEnum.ADMIN).orElse(null); //should never be null
-        // if (!userToDemoteToUser.getUserRoles().contains(adminRole)) {
-        //     throw new UserIsAlreadyOnlyUserException();
-        // }
-
+        //TODO: UX check if user cannot be demoted further
 
         userToDemoteToUser.getUserRoles().clear();
         userToDemoteToUser.getUserRoles().add(userRole);
 
-        userRepository.save(userToDemoteToUser); //Update!!!!
+        userRepository.save(userToDemoteToUser);
 
         return userService.getUserVmByUsername(username);
     }
 
-    //No MODERATOR role implemented yet
+    //TODO: implement MODERATOR role
 
     @Override
     public UserAdministrationViewModel banUser(String username) {
 
         UserEntity userToBan = userRepository.findByUsernameIgnoreCase(username).orElseThrow(UserNotFoundException::new);
         userToBan.setActive(false);
-        userRepository.save(userToBan); //Update!!!!
+        userRepository.save(userToBan);
 
         return userService.getUserVmByUsername(username);
     }
@@ -82,7 +73,7 @@ public class AdminServiceImpl implements AdminService {
     public UserAdministrationViewModel unbanUser(String username) {
         UserEntity userToUnban = userRepository.findByUsernameIgnoreCase(username).orElseThrow(UserNotFoundException::new);
         userToUnban.setActive(true);
-        userRepository.save(userToUnban); //Update!!!!
+        userRepository.save(userToUnban);
 
         return userService.getUserVmByUsername(username);
     }

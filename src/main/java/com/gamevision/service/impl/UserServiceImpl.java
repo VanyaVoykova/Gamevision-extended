@@ -60,7 +60,7 @@ public class UserServiceImpl implements UserService {
 
 
     public void registerAndLogin(UserRegisterBindingModel userRegisterBindingModel) {
-        //The check for exising username is in the controller to better control the redirect attributes for validation error visualization
+        //The check for existing username is in the controller to better control the redirect attributes for validation error visualization
 
         UserRegisterServiceModel newUserSM = modelMapper.map(userRegisterBindingModel, UserRegisterServiceModel.class);
         UserEntity newUser = modelMapper.map(newUserSM, UserEntity.class);
@@ -68,12 +68,10 @@ public class UserServiceImpl implements UserService {
         //Encode the password or SS will be angry
         newUser.setPassword(passwordEncoder.encode(userRegisterBindingModel.getPassword()));
 
-        //Set default profile picture
         ProfilePicture defaultPic = getProfilePicture();
 
         newUser.setProfilePicture(defaultPic);
 
-        //Get it from the REPOOOOOo
         UserRoleEntity defaultRole = userRoleRepository.findByName(UserRoleEnum.USER).orElse(null); //should never be null
         assert defaultRole != null; // to keep the IDE happy
         newUser.setUserRoles(Set.of(defaultRole));
@@ -100,24 +98,8 @@ public class UserServiceImpl implements UserService {
 
     }
 
-    //todo uncomment for User Profile functionality
- // public List<GameCardViewModel> getUserGamesByUsername(String username) {
- //     UserEntity user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
- //     Set<GameEntity> userGames = user.getGames();
- //     List<GameCardViewModel> userGamesAsCards = new ArrayList<>();
- //
- //     for (GameEntity gameEntity : userGames) {
- //         userGamesAsCards.add(gameService.mapGameEntityToCardView(gameEntity));
- //     }
 
- //     return userGamesAsCards;
- // }
-
-
-    //=============================================
-    //Initialization
-
-    //The default pass adminPass is "admin"
+    //====================Initialization=========================
 
     public void initUsers() {
         if (userRepository.count() == 0) {
@@ -137,10 +119,6 @@ public class UserServiceImpl implements UserService {
             //  initModerator(List.of(moderatorRole));
             initUser(Set.of(userRole)); //only the other two need specific roles
 
-            //Can be left like this since only admins have specific authorization:
-            // initAdmin(List.of(adminRole, moderatorRole));
-            //            initModerator(List.of(moderatorRole));
-            //            initUser(List.of()); //only the other two need specific roles
         }
     }
 
@@ -206,14 +184,11 @@ public class UserServiceImpl implements UserService {
     }
 
 
-    //===========================================
-    //Auxiliary methods
-
-    //TODO: check if throwing is needed
+    //==================Auxiliary methods=========================
 
     private ProfilePicture getProfilePicture() {
         ProfilePicture adminPic = new ProfilePicture();
-        adminPic.setUrl("/static/images/default-blank-profile-picture-640x640.png"); //TODO REPLACE HARDCODE and get a different default pic for admins
+        adminPic.setUrl("/static/images/default-blank-profile-picture-640x640.png");
         //Save the ProfilePicture to the DB first!!!! Otherwise: "object references an unsaved transient instance - save the transient instance before flushing" error!
         profilePictureRepository.save(adminPic);
         return adminPic;
