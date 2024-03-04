@@ -9,6 +9,7 @@ import com.gamevision.model.servicemodels.UserRegisterServiceModel;
 import com.gamevision.model.servicemodels.UserServiceModel;
 import com.gamevision.model.view.GameCardViewModel;
 import com.gamevision.model.view.UserAdministrationViewModel;
+import com.gamevision.model.view.UserViewModel;
 import com.gamevision.repository.ProfilePictureRepository;
 import com.gamevision.repository.UserRepository;
 import com.gamevision.repository.UserRoleRepository;
@@ -232,7 +233,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserAdministrationViewModel getUserVmByUsername(String username) {
+    public UserViewModel getUserViewModelByUsername(String username) {
+        UserEntity entity = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
+return new UserViewModel()
+        .setUsername(username)
+        .setProfilePicture(entity.getProfilePictureId())
+
+
+        return null;
+    }
+
+    @Override
+    public UserAdministrationViewModel getUserAdministrationViewModelByUsername(String username) {
         UserEntity entity = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
         return new UserAdministrationViewModel()
                 .setId(entity.getId())
@@ -241,6 +253,8 @@ public class UserServiceImpl implements UserService {
                 .setActive(entity.isActive());
 
     }
+
+
 
     //todo TBI for better UX, display a message when a banned user attempts to login
 

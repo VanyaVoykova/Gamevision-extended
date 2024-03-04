@@ -1,20 +1,15 @@
 package com.gamevision.service.impl;
 
-import com.gamevision.errorhandling.exceptions.UserIsAlreadyAdminException;
-import com.gamevision.errorhandling.exceptions.UserIsAlreadyOnlyUserException;
 import com.gamevision.errorhandling.exceptions.UserNotFoundException;
 import com.gamevision.model.entity.UserEntity;
 import com.gamevision.model.entity.UserRoleEntity;
 import com.gamevision.model.enums.UserRoleEnum;
 import com.gamevision.model.view.UserAdministrationViewModel;
-import com.gamevision.model.view.UserViewModel;
 import com.gamevision.repository.UserRepository;
 import com.gamevision.repository.UserRoleRepository;
 import com.gamevision.service.AdminService;
 import com.gamevision.service.UserService;
 import org.springframework.stereotype.Service;
-
-import java.util.HashSet;
 
 @Service
 public class AdminServiceImpl implements AdminService {
@@ -39,7 +34,7 @@ public class AdminServiceImpl implements AdminService {
 
         //TODO: UX check if user already is admin
 
-        return userService.getUserVmByUsername(username);
+        return userService.getUserAdministrationViewModelByUsername(username);
     }
 
     @Override
@@ -54,7 +49,7 @@ public class AdminServiceImpl implements AdminService {
 
         userRepository.save(userToDemoteToUser);
 
-        return userService.getUserVmByUsername(username);
+        return userService.getUserAdministrationViewModelByUsername(username);
     }
 
     //TODO: implement MODERATOR role
@@ -66,7 +61,7 @@ public class AdminServiceImpl implements AdminService {
         userToBan.setActive(false);
         userRepository.save(userToBan);
 
-        return userService.getUserVmByUsername(username);
+        return userService.getUserAdministrationViewModelByUsername(username);
     }
 
     @Override
@@ -75,6 +70,6 @@ public class AdminServiceImpl implements AdminService {
         userToUnban.setActive(true);
         userRepository.save(userToUnban);
 
-        return userService.getUserVmByUsername(username);
+        return userService.getUserAdministrationViewModelByUsername(username);
     }
 }

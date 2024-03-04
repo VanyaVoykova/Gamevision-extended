@@ -4,8 +4,7 @@ import com.gamevision.model.binding.UserRegisterBindingModel;
 import com.gamevision.model.entity.UserEntity;
 import com.gamevision.model.servicemodels.UserServiceModel;
 import com.gamevision.model.view.UserAdministrationViewModel;
-
-import java.util.Optional;
+import com.gamevision.model.view.UserViewModel;
 
 public interface UserService {
     boolean isUserNameFree(String username); //for register
@@ -23,7 +22,9 @@ public interface UserService {
 
     UserServiceModel getUserSmByUsername(String username);
 
-    UserAdministrationViewModel getUserVmByUsername(String username); //ViewModel for Admins (need to see roles and active status)
+    UserViewModel getUserViewModelByUsername(String username);
+
+    UserAdministrationViewModel getUserAdministrationViewModelByUsername(String username); //ViewModel for Admins (need to see roles and active status)
     //  void updateUser(UserEntity user);
 
     void initUsers();

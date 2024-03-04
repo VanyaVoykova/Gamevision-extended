@@ -53,13 +53,10 @@ public class AuthenticationController { //REGISTER AND LOGIN
             return "redirect:/users/register";
         }
 
-
-        //Uses UserService, Authentication is separate only in controllers to avoid UserController getting too fat
-        // userService.registerUser(modelMapper.map(userRegisterBindingModel, UserServiceModel.class));
         try {
             userService.registerAndLogin(userRegisterBindingModel);
         } catch (RuntimeException e) {
-            model.addAttribute("exceptionMessage", e.getMessage()); //or with model???
+            model.addAttribute("exceptionMessage", e.getMessage());
             model.addAttribute("exceptionCause", e.getCause());
             return "error"; //should be returned automatically
         }
@@ -69,7 +66,6 @@ public class AuthenticationController { //REGISTER AND LOGIN
     }
 
 
-    //Model attribute for register
     @ModelAttribute
     public UserRegisterBindingModel userRegisterBindingModel() {
         return new UserRegisterBindingModel();
@@ -83,12 +79,8 @@ public class AuthenticationController { //REGISTER AND LOGIN
         return "login";
     }
 //In SS config:
-     //  .antMatchers(HttpMethod.POST, "/users/register", "/users/login").anonymous()
+    //  .antMatchers(HttpMethod.POST, "/users/register", "/users/login").anonymous()
 
-
-//Todo: doesn't work here; Mobilelele is w/o one
-    //Takes care for login errors
-    //Should be post mapping!  Original: "/users/login-error"
     @PostMapping("/users/login-error")
     public String onFailedLogin(
             @ModelAttribute(UsernamePasswordAuthenticationFilter.SPRING_SECURITY_FORM_USERNAME_KEY) String username,
@@ -98,15 +90,6 @@ public class AuthenticationController { //REGISTER AND LOGIN
         redirectAttributes.addFlashAttribute("bad_credentials", true);
 //
         return "redirect:/users/login";
-    }
-
-    //Better put this in UserController
-    @GetMapping("/users/profile")//Principal (userdata for current user) - from SS, Model from Spring
-    public String profile(Principal principal, Model model) { //todo check if ModelMapper will be necessary here, otherwise this controller doesn't need it
-   //TODO
-
-        return "user-profile";
-
     }
 
 

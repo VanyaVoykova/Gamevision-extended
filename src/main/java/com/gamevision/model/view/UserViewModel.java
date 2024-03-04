@@ -1,15 +1,17 @@
 package com.gamevision.model.view;
 
+import com.gamevision.model.entity.ProfilePicture;
+
 public class UserViewModel {
     private String username;
-    private Long profilePictureId;
+    private ProfilePicture profilePicture;
 
     public UserViewModel() {
     }
 
-    public UserViewModel(String username, Long profilePictureId) {
+    public UserViewModel(String username, ProfilePicture profilePicture) {
         this.username = username;
-        this.profilePictureId = profilePictureId;
+        this.profilePicture = profilePicture;
     }
 
     public String getUsername() {
@@ -21,12 +23,12 @@ public class UserViewModel {
         return this;
     }
 
-    public Long getProfilePictureId() {
-        return profilePictureId;
+    public ProfilePicture getProfilePicture() {
+        return profilePicture;
     }
 
-    public UserViewModel setProfilePictureId(Long profilePictureId) {
-        this.profilePictureId = profilePictureId;
+    public UserViewModel setProfilePicture(ProfilePicture profilePicture) {
+        this.profilePicture = profilePicture;
         return this;
     }
 }

@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 @RestController
-//@RequestMapping("/admin")
 public class AdminRestController {
     private final UserService userService;
     private final AdminService adminService;
@@ -25,24 +24,16 @@ public class AdminRestController {
         this.adminService = adminService;
     }
 
-    //  @GetMapping("/admin") //is loaded by a regular @AdminController
     @RequestMapping("/admin")
     public ModelAndView adminPanel() {
         return new ModelAndView("admin-panel");
     }
-
-    //These return UserAdministrationViewModel that has extra data compared from the regular UserViewModel.
-    //This was meant to provide admins a way to check the user's role and active status from the app itself.
-    //But time is short...
 
     @PutMapping("/admin/promote") //todo need to get the value somehow
     @ResponseStatus(HttpStatus.OK)
     //UserManageBindingModel holds username only; UserViewModel holds name and profilePictureId
     public ResponseEntity<UserAdministrationViewModel> promoteUser(@AuthenticationPrincipal UserDetails userDetails,
                                                                    @Validated @RequestBody UserManageBindingModel userManageBindingModel) {
-
-        //ExceptionHandler should handle any exceptions here
-        //NO ERROR HANDLING HERE!!!!!!!!!! The JS needs either a throw from here or the @ExceptionHandler below!!!
 
         adminService.promoteUserToAdmin(userManageBindingModel.getUsername());
 
@@ -51,8 +42,6 @@ public class AdminRestController {
         return ResponseEntity.status(200).body(userAdminVM);
         // return String.format("User %s promoted successfully", userManageBindingModel.getUsername());
 
-        //ResponseEntity.ok();
-        //                      (URI.create(String.format("/admin/promote/%d", userAdminVM.getId()))).body(userAdminVM);
     }
 
 
