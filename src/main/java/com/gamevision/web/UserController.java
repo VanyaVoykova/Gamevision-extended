@@ -21,7 +21,7 @@ public class UserController {
     @GetMapping("/users/profile/{username}")//Principal (userdata for current user) - from SS, Model from Spring
     public String profile(Principal principal, @PathVariable("username") String username, Model model) { //todo check if ModelMapper will be necessary here, otherwise this controller doesn't need it
         //TODO
-        UserViewModel userViewModel = userService.getUserViewModelByUsername(username);
+        UserProfileViewModel userViewModel = userService.getUserProfileViewModelByUsername(username);
 
         // model.addAttribute("game", gameViewModel);
 

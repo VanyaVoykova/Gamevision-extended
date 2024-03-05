@@ -9,6 +9,7 @@ import com.gamevision.model.servicemodels.UserRegisterServiceModel;
 import com.gamevision.model.servicemodels.UserServiceModel;
 import com.gamevision.model.view.GameCardViewModel;
 import com.gamevision.model.view.UserAdministrationViewModel;
+import com.gamevision.model.view.UserProfileViewModel;
 import com.gamevision.model.view.UserViewModel;
 import com.gamevision.repository.ProfilePictureRepository;
 import com.gamevision.repository.UserRepository;
@@ -25,10 +26,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 //No separate AuthenticationService, register is here, login is handled
@@ -233,14 +231,24 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserProfileViewModel getUserProfileViewModel(String username) {
+        UserEntity userEntity = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
+        List<GameCardViewModel> gamesCardViewModels = new ArrayList<>();
+
+        userEntity.getGames().forEach((e) -> gamesCardViewModels.add(gameService.mapGameEntityToCardView(e)));
+
+        return new UserProfileViewModel()
+                .setUsername(username)
+                .setProfilePicture(userEntity.getProfilePicture())
+                .setMyGames(gamesCardViewModels);
+    }
+
+    @Override
     public UserViewModel getUserViewModelByUsername(String username) {
-        UserEntity entity = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
-return new UserViewModel()
-        .setUsername(username)
-        .setProfilePicture(entity.getProfilePictureId())
-
-
-        return null;
+        UserEntity userEntity = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
+        return new UserViewModel()
+                .setUsername(username)
+                .setProfilePicture(userEntity.getProfilePicture());
     }
 
     @Override
@@ -253,7 +261,6 @@ return new UserViewModel()
                 .setActive(entity.isActive());
 
     }
-
 
 
     //todo TBI for better UX, display a message when a banned user attempts to login

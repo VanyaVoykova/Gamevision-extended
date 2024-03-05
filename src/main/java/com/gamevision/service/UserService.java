@@ -4,6 +4,7 @@ import com.gamevision.model.binding.UserRegisterBindingModel;
 import com.gamevision.model.entity.UserEntity;
 import com.gamevision.model.servicemodels.UserServiceModel;
 import com.gamevision.model.view.UserAdministrationViewModel;
+import com.gamevision.model.view.UserProfileViewModel;
 import com.gamevision.model.view.UserViewModel;
 
 public interface UserService {
@@ -21,6 +22,8 @@ public interface UserService {
    UserEntity findUserByUsername(String username); //fix this, use the one below only
 
     UserServiceModel getUserSmByUsername(String username);
+
+    UserProfileViewModel getUserProfileViewModel(String username);
 
     UserViewModel getUserViewModelByUsername(String username);
 
